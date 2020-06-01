@@ -48,9 +48,11 @@ class RNAirplay: RCTEventEmitter {
     @objc func isAvailable() -> Void {
         var isAvailable = false
         let currentRoute = AVAudioSession.sharedInstance().currentRoute
-        let routeCount = currentRoute.outputs.count
-        if (routeCount > 0) {
-            isAvailable = true
+        for output in currentRoute.outputs {
+            if output.portType == AVAudioSession.Port.airPlay {
+                isAvailable = true
+                break;
+            }
         }
         self.sendEvent(withName: "airplayAvailable", body: ["available": isAvailable])
     }
